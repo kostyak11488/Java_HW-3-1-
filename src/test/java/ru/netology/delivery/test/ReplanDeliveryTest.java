@@ -13,9 +13,21 @@ public class ReplanDeliveryTest {
 
     @BeforeEach
     void setup() {
-        Configuration.holdBrowserOpen = false;
+        Configuration.browser = "chrome";
+        Configuration.headless = true;
+        Configuration.browserCapabilities.setCapability(
+                "goog:chromeOptions",
+                java.util.Map.of(
+                        "args",
+                        java.util.List.of(
+                                "--no-sandbox",
+                                "--disable-dev-shm-usage"
+                        )
+                )
+        );
         open("http://localhost:9999");
     }
+
 
     @Test
     void shouldReplanDeliveryDate() {
