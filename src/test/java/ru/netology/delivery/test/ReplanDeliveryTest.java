@@ -25,7 +25,7 @@ public class ReplanDeliveryTest {
                         )
                 )
         );
-        open("http://localhost:9999");
+        open("http://localhost:8080");
     }
 
 
