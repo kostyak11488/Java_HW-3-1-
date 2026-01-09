@@ -21,15 +21,16 @@ jobs:
       - name: Start SUT
         run: |
           java -jar ./artifacts/app-replan-delivery.jar &
-          echo "Waiting for SUT to start..."
+          echo "Waiting for SUT on port 9999..."
           for i in {1..20}; do
-            if nc -z localhost 8080; then
+            if nc -z localhost 9999; then
               echo "SUT is up!"
               break
             fi
             sleep 1
           done
 
-      - name: Build with Gradle
+      - name: Run tests
         run: ./gradlew test -Dselenide.headless=true --info
+
 
