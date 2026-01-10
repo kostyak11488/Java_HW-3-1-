@@ -1,21 +1,22 @@
 package ru.netology.delivery.data;
 
+import com.github.javafaker.Faker;
+
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.Random;
+import java.util.Locale;
 
 public class DataGenerator {
-
-    private static final Random random = new Random();
+    private static final Faker faker = new Faker(new Locale("ru"));
 
     private DataGenerator() {
     }
 
     public static UserInfo generateUser() {
         return new UserInfo(
-                generateCity(),
-                "Иванов Иван",
-                "+79990000000"
+                "Москва",
+                faker.name().fullName(),
+                faker.phoneNumber().phoneNumber()
         );
     }
 
@@ -24,17 +25,6 @@ public class DataGenerator {
                 .plusDays(days)
                 .format(DateTimeFormatter.ofPattern("dd.MM.yyyy"));
     }
-
-    private static String generateCity() {
-        String[] cities = {
-                "Москва",
-                "Санкт-Петербург",
-                "Казань",
-                "Екатеринбург",
-                "Новосибирск",
-                "Самара"
-        };
-        return cities[random.nextInt(cities.length)];
-    }
 }
+
 
