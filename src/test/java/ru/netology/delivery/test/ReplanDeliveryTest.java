@@ -7,6 +7,7 @@ import ru.netology.delivery.data.DataGenerator;
 import ru.netology.delivery.data.UserInfo;
 
 import static com.codeborne.selenide.Condition.text;
+import static com.codeborne.selenide.Condition.visible;
 import static com.codeborne.selenide.Selenide.*;
 
 public class ReplanDeliveryTest {
@@ -27,7 +28,11 @@ public class ReplanDeliveryTest {
         $("[data-test-id=name] input").setValue(user.getName());
         $("[data-test-id=phone] input").setValue(user.getPhone());
         $("[data-test-id=date] input").doubleClick().sendKeys(firstDate);
-        $("[data-test-id=agreement]").click();
+        $("[data-test-id=agreement]")
+                .shouldBe(visible)
+                .scrollTo()
+                .click();
+
         $$("button").find(text("Запланировать")).click();
 
         $("[data-test-id=success-notification]")
