@@ -7,7 +7,7 @@ import ru.netology.delivery.data.DataGenerator;
 import ru.netology.delivery.data.UserInfo;
 
 import static com.codeborne.selenide.Selenide.*;
-import static com.codeborne.selenide.Selectors.withText;
+import static com.codeborne.selenide.Condition.*;
 
 public class ReplanDeliveryTest {
 
@@ -18,7 +18,6 @@ public class ReplanDeliveryTest {
 
     @Test
     void shouldReplanDeliveryDate() {
-        // данные
         UserInfo user = DataGenerator.generateUser();
         String firstDate = DataGenerator.generateDate(3);
         String secondDate = DataGenerator.generateDate(7);
@@ -26,35 +25,50 @@ public class ReplanDeliveryTest {
         // город
         $("[data-test-id=city] input").setValue(user.getCity());
 
-        // дата — ПЕРВОЙ
+        // дата — первой
         $("[data-test-id=date] input").doubleClick().sendKeys(firstDate);
 
-        // имя и телефон — ПОСЛЕ даты (КЛЮЧЕВОЕ ЗАМЕЧАНИЕ)
+        // имя и телефон — после даты
         $("[data-test-id=name] input").setValue(user.getName());
         $("[data-test-id=phone] input").setValue(user.getPhone());
 
-        // согласие и отправка
+        // согласие
         $("[data-test-id=agreement]").click();
-        $$("button").find(Condition.text("Запланировать")).click();
 
-        // первое подтверждение
+        // кнопка Запланировать (ждём, что она кликабельна)
+        $$("button")
+                .find(text("Запланировать"))
+                .shouldBe(enabled)
+                .click();
+
+        // ✅ сообщение об успешном планировании — ЖДЁМ
         $("[data-test-id=success-notification]")
-                .shouldHave(Condition.text("Встреча успешно запланирована на " + firstDate));
+                .shouldBe(visible)
+                .shouldHave(text("Встреча успешно запланирована на " + firstDate));
 
         // новая дата
         $("[data-test-id=date] input").doubleClick().sendKeys(secondDate);
-        $$("button").find(Condition.text("Запланировать")).click();
+        $$("button")
+                .find(text("Запланировать"))
+                .shouldBe(enabled)
+                .click();
 
-        // уведомление о перепланировании
+        // ✅ сообщение о перепланировании — ЖДЁМ
         $("[data-test-id=replan-notification]")
-                .shouldHave(Condition.text("У вас уже запланирована встреча"));
+                .shouldBe(visible)
+                .shouldHave(text("У вас уже запланирована встреча"));
 
-        // подтверждаем перепланирование
-        $$("button").find(Condition.text("Перепланировать")).click();
+        // кнопка Перепланировать
+        $$("button")
+                .find(text("Перепланировать"))
+                .shouldBe(enabled)
+                .click();
 
-        // финальное подтверждение
+        // ✅ финальное сообщение — ЖДЁМ
         $("[data-test-id=success-notification]")
-                .shouldHave(Condition.text("Встреча успешно запланирована на " + secondDate));
+                .shouldBe(visible)
+                .shouldHave(text("Встреча успешно запланирована на " + secondDate));
     }
 }
+
 
